@@ -16,7 +16,7 @@ if __name__ == "__main__":
     extension = ".json"
     debug_count = 0
     content_id = "000000000"
-    channel_id = STREAMER_ID
+    channel_id = str(STREAMER_ID)
     id = 1000000
     user_id = 770000
     jsonArray = []
@@ -41,8 +41,8 @@ if __name__ == "__main__":
         return word_array
     
     def get_usernames_and_colors(filename):
-        usernames = list(numpy.loadtxt(filename, delimiter=",", dtype="str", comments="/", usecols=0))
-        colors = list(numpy.loadtxt(filename, delimiter=",", dtype="str", comments="/", usecols=1))
+        usernames = list(numpy.loadtxt(filename, delimiter=",", dtype="str", comments="/", usecols=0, ndmin=1))
+        colors = list(numpy.loadtxt(filename, delimiter=",", dtype="str", comments="/", usecols=1, ndmin=1))
 
         usernames = [x.strip() for x in usernames]
         colors = [x.strip() for x in colors]
