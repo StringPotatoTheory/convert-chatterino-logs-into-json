@@ -5,7 +5,7 @@ import io, sys, json, os, numpy
 # find the ID for a streamer here: https://streamscharts.com/tools/convert-username
 # or here: https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/
 
-STREAMER_USERNAME = "HasanAbi"
+STREAMER_USERNAME = ""
 STREAMER_ID = 207813352
 
 
@@ -47,8 +47,8 @@ if __name__ == "__main__":
         usernames = [x.strip() for x in usernames]
         colors = [x.strip() for x in colors]
 
-        print(usernames)
-        print(colors)
+        # print(usernames)
+        # print(colors)
 
         return usernames, colors
     
@@ -122,18 +122,18 @@ if __name__ == "__main__":
                 }
             }
 
-            # tries to find the name in the list, if it's not found just continue
+            # tries to find the name in the list, if it's not found just pass this section
             try:
                 username_color_index = COLORS_USERNAMES.index(name)
                 if username_color_index >= 0:
                     the_json["message"]["user_color"] = COLORS[username_color_index]
-            except: continue
+            except: pass
 
             if name.lower() in MODERATORS:
                 the_json["message"]["user_badges"] = [{}]
                 the_json["message"]["user_badges"][0]["_id"] = "moderator"
                 the_json["message"]["user_badges"][0]["version"] = "1"
-            elif name.lower() is STREAMER_USERNAME.lower():
+            elif name.strip().lower() == STREAMER_USERNAME.strip().lower():
                 the_json["message"]["user_badges"] = [{}]
                 the_json["message"]["user_badges"][0]["_id"] = "broadcaster"
                 the_json["message"]["user_badges"][0]["version"] = "1"
