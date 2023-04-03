@@ -37,6 +37,10 @@ if __name__ == "__main__":
                 for line in reader:
                     words = line.split(',')
                     word_array += words
+
+            if not word_array:
+                print(filename + " is empty, none of these badges will be added to any messages")
+
             # removes trailing and leading spaces and newlines, and removes elements if they are empty
             word_array = [x.strip() for x in word_array if x.strip()]
         except FileNotFoundError:
@@ -52,6 +56,9 @@ if __name__ == "__main__":
 
             usernames = list(numpy.loadtxt(filename, delimiter=",", dtype="str", comments="/", usecols=0, ndmin=1))
             colors = list(numpy.loadtxt(filename, delimiter=",", dtype="str", comments="/", usecols=1, ndmin=1))
+
+            if not usernames:
+                print(filename + " is empty, no colors will be set for any usernames")
 
             usernames = [x.strip() for x in usernames]
             colors = [x.strip() for x in colors]
