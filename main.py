@@ -1,4 +1,4 @@
-import io, sys, json, os, numpy
+import io, sys, json, os, numpy, warnings
 
 
 # change these values to the streamer's name and ID
@@ -47,6 +47,9 @@ if __name__ == "__main__":
     
     def get_usernames_and_colors(filename):
         try:
+            # disables numpy warnings from being displayed in console
+            warnings.filterwarnings('ignore')
+
             usernames = list(numpy.loadtxt(filename, delimiter=",", dtype="str", comments="/", usecols=0, ndmin=1))
             colors = list(numpy.loadtxt(filename, delimiter=",", dtype="str", comments="/", usecols=1, ndmin=1))
 
@@ -92,7 +95,7 @@ if __name__ == "__main__":
                     #print("." + name + ".")
                     message = splitLine[3].rstrip('\n')
                     is_action = False
-                except: continue # if there happens to be a timestamp and a blank line, ignore it and continue to the next line
+                except IndexError: continue # if there happens to be a timestamp and a blank line, ignore it and continue to the next line
             elif splitLine[2] == "subscribed":
                 splitSub = line.split(' ', 2)
                 name = splitSub[1]
@@ -135,7 +138,7 @@ if __name__ == "__main__":
                 username_color_index = COLORS_USERNAMES.index(name)
                 if username_color_index >= 0:
                     the_json["message"]["user_color"] = COLORS[username_color_index]
-            except: pass
+            except ValueError: pass
 
             if name.lower() in MODERATORS:
                 the_json["message"]["user_badges"] = [{}]
@@ -157,7 +160,7 @@ if __name__ == "__main__":
     
     try:
         os.remove(filename + extension)
-    except: pass
+    except FileNotFoundError: pass
     
     writer = io.open(filename + extension, 'w', encoding='utf8')
 
