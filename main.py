@@ -21,7 +21,7 @@ if __name__ == "__main__":
     user_id = 770000
     jsonArray = []
     start = '{"streamer": { "name": "' + STREAMER_USERNAME + '", "id": ' + str(STREAMER_ID) + ' }, "comments":'
-    end = '}'
+    end = ',"embeddedData": null }'
 
     USER_NOTICE_PARAM_SUB = {"msg-id": "resub"}
 
@@ -93,7 +93,6 @@ if __name__ == "__main__":
             the_json = {
                 "_id": "c2345678-9012-3456-7890-" + str(id),
                 "created_at": datestamp,
-                "updated_at": datestamp,
                 "channel_id": channel_id,
                 "content_type": "video",
                 "content_id": content_id,
@@ -102,23 +101,21 @@ if __name__ == "__main__":
                     "display_name": name,
                     "_id": "" + str(user_id),
                     "name": name,
-                    "type": "user",
                     "bio": "",
                     "created_at": datestamp,
                     "updated_at": datestamp,
                     "logo": ""
                 },
-                "source": "chat",
-                "state": "published",
                 "message": {
                     "body": message,
+                    "bits_spent": 0,
                     "fragments": [
                         {
-                            "text": message
+                            "text": message,
+                            "emoticon": None
                         }
                     ],
-                    "is_action": is_action,
-                    "user_notice_params": user_notice
+                    "emoticons": []
                 }
             }
 
