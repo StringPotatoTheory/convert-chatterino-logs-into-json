@@ -6,7 +6,7 @@ Run your Chatterino logs through this program then use [Twitch Downloader](https
 
 If the code crashes or doesn't work as expected, please create an issue and include either your chatterino log file you are trying to convert or include the line that caused problems.
 
-**NOTE** If you get the following error while using Twitch Downloader v1.52.2: `ERROR: Value cannot be null. (Parameter 'source')` wait until the next version to be released, or use [this build](https://github.com/lay295/TwitchDownloader/actions/runs/4580082135).
+**NOTE** If you get the following error while using Twitch Downloader v1.52.2: `ERROR: Value cannot be null. (Parameter 'source')` wait until the next version is released, or use [this build](https://github.com/lay295/TwitchDownloader/actions/runs/4580082135).
 
 ## How to Use
 
