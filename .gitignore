@@ -1,2 +1,6 @@
 *.json
 *.log
+
+config/colors.csv
+config/mods.csv
+config/vips.csv
