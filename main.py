@@ -31,21 +31,32 @@ if __name__ == "__main__":
     COLORS_USERNAMES = []
 
     def convert_csv_into_array(filename):
-        with io.open(filename, 'r', encoding='utf8') as reader:
+        try:
+            with io.open(filename, 'r', encoding='utf8') as reader:
+                word_array = []
+                for line in reader:
+                    words = line.split(',')
+                    word_array += words
+            # removes trailing and leading spaces and newlines, and removes elements if they are empty
+            word_array = [x.strip() for x in word_array if x.strip()]
+        except FileNotFoundError:
+            print(filename + " is not found, none of these badges will be added to any messages")
             word_array = []
-            for line in reader:
-                words = line.split(',')
-                word_array += words
-        # removes trailing and leading spaces and newlines, and removes elements if they are empty
-        word_array = [x.strip() for x in word_array if x.strip()]
+            pass
         return word_array
     
     def get_usernames_and_colors(filename):
-        usernames = list(numpy.loadtxt(filename, delimiter=",", dtype="str", comments="/", usecols=0, ndmin=1))
-        colors = list(numpy.loadtxt(filename, delimiter=",", dtype="str", comments="/", usecols=1, ndmin=1))
+        try:
+            usernames = list(numpy.loadtxt(filename, delimiter=",", dtype="str", comments="/", usecols=0, ndmin=1))
+            colors = list(numpy.loadtxt(filename, delimiter=",", dtype="str", comments="/", usecols=1, ndmin=1))
 
-        usernames = [x.strip() for x in usernames]
-        colors = [x.strip() for x in colors]
+            usernames = [x.strip() for x in usernames]
+            colors = [x.strip() for x in colors]
+        except FileNotFoundError:
+            print(filename + " is not found, no colors will be set for any usernames")
+            usernames = []
+            colors = []
+            pass
 
         # print(usernames)
         # print(colors)
