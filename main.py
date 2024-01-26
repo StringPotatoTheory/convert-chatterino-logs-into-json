@@ -5,8 +5,8 @@ import io, sys, json, os, numpy, warnings
 # find the ID for a streamer here: https://streamscharts.com/tools/convert-username
 # or here: https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/
 
-STREAMER_USERNAME = ""
-STREAMER_ID = 207813352
+STREAMER_USERNAME = "demonadcL9"
+STREAMER_ID = 480960481
 
 
 
@@ -77,14 +77,25 @@ if __name__ == "__main__":
 
     MODERATORS = convert_csv_into_array("config/mods.csv")
     VIPS = convert_csv_into_array("config/vips.csv")
+    
+    firstIteration = True
+    dayStartCheck = 0
+    newday = False
 
     with io.open(filename, 'r', encoding='utf8') as reader:
         for line in reader:
+            #checking if the line is a message
+            if line[0] != '[':
+                continue
+
             #debug_count = debug_count + 1
             #print(debug_count)
 
-            splitLine = line.split(' ', 3)
+            splitLine = line.split(' ', 2)
             #print(splitLine)
+
+            if len(splitLine) <= 2:
+                continue
 
             user_notice = {}
             user_badges = {}
@@ -94,22 +105,45 @@ if __name__ == "__main__":
             #print(timestampSplit)
             offset_seconds = (int(timestampSplit[0]) * 3600) + (int(timestampSplit[1]) * 60) + int(timestampSplit[2])
             
-            datestamp = "2023-01-01T" + timestamp + "Z"
+            #checking next day (bad implementation prob (only 2 days))
+            #>>>offset_seconds compare instead of just hours
+            datestamp = ""
+
+            if firstIteration:
+                firstIteration = False
+                dayStartCheck = timestampSplit[0]
+
+            if timestampSplit[0] < dayStartCheck:
+                datestamp = "2023-01-02T" + timestamp + "Z"
+                offset_seconds = offset_seconds + (24 * 3600)
+            else:
+                datestamp = "2023-01-01T" + timestamp + "Z"
             
-            if splitLine[1].rstrip('\n') == "":
+            name = ""
+            message = ""
+            
+            if splitLine[1][len(splitLine[1]) - 1] == ':':
+                name = splitLine[1].rstrip(':')
+                message = splitLine[2].rstrip('\n')
+                #print("." + name + ".")
+                #print("." + message + ".")
+            #i don't understand what this supposed to do
+            elif splitLine[1].rstrip('\n') == "":
                 try:
                     name = splitLine[2].rstrip(':')
                     #print("." + name + ".")
                     message = splitLine[3].rstrip('\n')
                     is_action = False
                 except IndexError: continue # if there happens to be a timestamp and a blank line, ignore it and continue to the next line
-            elif splitLine[2] == "subscribed":
+            elif "subscribed" in splitLine[2]:
                 splitSub = line.split(' ', 2)
                 name = splitSub[1]
                 message = name + " " + splitSub[2].rstrip('\n')
                 user_notice = USER_NOTICE_PARAM_SUB
 
                 is_action = False
+            else:
+                continue
 
             the_json = {
                 "_id": "c2345678-9012-3456-7890-" + str(id),
