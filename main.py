@@ -5,8 +5,8 @@ import io, sys, json, os, numpy, warnings
 # find the ID for a streamer here: https://streamscharts.com/tools/convert-username
 # or here: https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/
 
-STREAMER_USERNAME = "demonadcL9"
-STREAMER_ID = 480960481
+STREAMER_USERNAME = ""
+STREAMER_ID = 207813352
 
 
 
