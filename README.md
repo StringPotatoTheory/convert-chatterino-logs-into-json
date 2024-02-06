@@ -31,6 +31,15 @@ username_2, #00cc00
 
 4. **Set the streamer's ID**. In [main.py](main.py) near the top, set the variable `STREAMER_ID`. You can find their ID either from [here](https://streamscharts.com/tools/convert-username) or [here](https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/).
 
+### Versions
+
+If you are wanting to convert Chatterino logs that are from before late 2023 that have the below format, [download v1.0.0 here](https://github.com/StringPotatoTheory/convert-chatterino-logs-into-json/releases/tag/v1.0.0).
+
+- `[12:44:00]  username: message` (with two spaces after the timestamp)
+- `[18:51:25] username gifted a Tier 1 sub to username2!` (only one space after the timestamp)
+
+If your logs are from a newer Chatterino version, [download a newer release](https://github.com/StringPotatoTheory/convert-chatterino-logs-into-json/releases) or clone this repo as you would normally.
+
 ### Run it
 
 Run it using:
