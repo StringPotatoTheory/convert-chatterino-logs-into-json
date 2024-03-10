@@ -4,7 +4,7 @@ Want to render chat as a video but you only have the Chatterino logs and weren't
 
 Run your Chatterino logs through this program then use [Twitch Downloader](https://github.com/lay295/TwitchDownloader) to render chat into a video.
 
-If the code crashes or doesn't work as expected, please create an issue and include either your Chatterino log file you are trying to convert, or include the line that caused problems and the error message.
+If the code crashes or doesn't work as expected, please [create an issue](https://github.com/StringPotatoTheory/convert-chatterino-logs-into-json/issues) and include either your Chatterino log file you are trying to convert, or include the line that caused problems and the error message.
 
 ## How to Use
 
@@ -53,3 +53,11 @@ Example:
 ```bash
 python main.py streamer-2024-01-01.log
 ```
+
+## Contributing
+
+Contributions and suggestions welcome! Either view the [contributing guide](CONTRIBUTING.md) for making a pull request, or feel free to add any suggestions or bugs in the [issue tracker](https://github.com/StringPotatoTheory/convert-chatterino-logs-into-json/issues).
+
+## License
+
+This project is under the [GPLv3 License](LICENSE).
