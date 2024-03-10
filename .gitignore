@@ -1,6 +1,10 @@
 *.json
 *.log
 
+*.mov
+*.mp4
+*.mkv
+
 config/colors.csv
 config/mods.csv
 config/vips.csv
