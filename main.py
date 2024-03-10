@@ -10,6 +10,50 @@ STREAMER_ID = 207813352
 
 
 
+def convert_csv_into_array(filename):
+    try:
+        with io.open(filename, 'r', encoding='utf8') as reader:
+            word_array = []
+            for line in reader:
+                words = line.split(',')
+                word_array += words
+
+        if not word_array:
+            print(filename + " is empty, none of these badges will be added to any messages")
+
+        # removes trailing and leading spaces and newlines, and removes elements if they are empty
+        word_array = [x.strip() for x in word_array if x.strip()]
+    except FileNotFoundError:
+        print(filename + " is not found, none of these badges will be added to any messages")
+        word_array = []
+        pass
+    return word_array
+    
+def get_usernames_and_colors(filename):
+    try:
+        # disables numpy warnings from being displayed in console
+        warnings.filterwarnings('ignore')
+
+        usernames = list(numpy.loadtxt(filename, delimiter=",", dtype="str", comments="/", usecols=0, ndmin=1))
+        colors = list(numpy.loadtxt(filename, delimiter=",", dtype="str", comments="/", usecols=1, ndmin=1))
+
+        if not usernames:
+            print(filename + " is empty, no colors will be set for any usernames")
+
+        usernames = [x.strip() for x in usernames]
+        colors = [x.strip() for x in colors]
+    except FileNotFoundError:
+        print(filename + " is not found, no colors will be set for any usernames")
+        usernames = []
+        colors = []
+        pass
+
+    # print(usernames)
+    # print(colors)
+
+    return usernames, colors
+
+
 if __name__ == "__main__":
     filename = sys.argv[1]
     
@@ -29,49 +73,6 @@ if __name__ == "__main__":
     VIPS = []
     COLORS = []
     COLORS_USERNAMES = []
-
-    def convert_csv_into_array(filename):
-        try:
-            with io.open(filename, 'r', encoding='utf8') as reader:
-                word_array = []
-                for line in reader:
-                    words = line.split(',')
-                    word_array += words
-
-            if not word_array:
-                print(filename + " is empty, none of these badges will be added to any messages")
-
-            # removes trailing and leading spaces and newlines, and removes elements if they are empty
-            word_array = [x.strip() for x in word_array if x.strip()]
-        except FileNotFoundError:
-            print(filename + " is not found, none of these badges will be added to any messages")
-            word_array = []
-            pass
-        return word_array
-    
-    def get_usernames_and_colors(filename):
-        try:
-            # disables numpy warnings from being displayed in console
-            warnings.filterwarnings('ignore')
-
-            usernames = list(numpy.loadtxt(filename, delimiter=",", dtype="str", comments="/", usecols=0, ndmin=1))
-            colors = list(numpy.loadtxt(filename, delimiter=",", dtype="str", comments="/", usecols=1, ndmin=1))
-
-            if not usernames:
-                print(filename + " is empty, no colors will be set for any usernames")
-
-            usernames = [x.strip() for x in usernames]
-            colors = [x.strip() for x in colors]
-        except FileNotFoundError:
-            print(filename + " is not found, no colors will be set for any usernames")
-            usernames = []
-            colors = []
-            pass
-
-        # print(usernames)
-        # print(colors)
-
-        return usernames, colors
     
     COLORS_USERNAMES, COLORS = get_usernames_and_colors("config/colors.csv")
 
@@ -206,5 +207,5 @@ if __name__ == "__main__":
     writer = io.open(filename + extension, 'w', encoding='utf8')
 
     writer.write(start)
-    json.dump(jsonArray, writer)
+    json.dump(jsonArray, writer, indent=2)
     writer.write(end)
