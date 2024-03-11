@@ -8,42 +8,43 @@ import io, sys, json, os, numpy, warnings
 STREAMER_USERNAME = ""
 STREAMER_ID = 207813352
 
+DEBUG_MODE = False
 
 
-def convert_csv_into_array(filename):
+def convert_csv_into_array(file_name):
     try:
-        with io.open(filename, 'r', encoding='utf8') as reader:
+        with io.open(file_name, 'r', encoding='utf8') as reader:
             word_array = []
             for line in reader:
                 words = line.split(',')
                 word_array += words
 
         if not word_array:
-            print(filename + " is empty, none of these badges will be added to any messages")
+            print(file_name + " is empty, none of these badges will be added to any messages")
 
         # removes trailing and leading spaces and newlines, and removes elements if they are empty
         word_array = [x.strip() for x in word_array if x.strip()]
     except FileNotFoundError:
-        print(filename + " is not found, none of these badges will be added to any messages")
+        print(file_name + " is not found, none of these badges will be added to any messages")
         word_array = []
         pass
     return word_array
     
-def get_usernames_and_colors(filename):
+def get_usernames_and_colors(file_name):
     try:
         # disables numpy warnings from being displayed in console
         warnings.filterwarnings('ignore')
 
-        usernames = list(numpy.loadtxt(filename, delimiter=",", dtype="str", comments="/", usecols=0, ndmin=1))
-        colors = list(numpy.loadtxt(filename, delimiter=",", dtype="str", comments="/", usecols=1, ndmin=1))
+        usernames = list(numpy.loadtxt(file_name, delimiter=",", dtype="str", comments="/", usecols=0, ndmin=1))
+        colors = list(numpy.loadtxt(file_name, delimiter=",", dtype="str", comments="/", usecols=1, ndmin=1))
 
         if not usernames:
-            print(filename + " is empty, no colors will be set for any usernames")
+            print(file_name + " is empty, no colors will be set for any usernames")
 
         usernames = [x.strip() for x in usernames]
         colors = [x.strip() for x in colors]
     except FileNotFoundError:
-        print(filename + " is not found, no colors will be set for any usernames")
+        print(file_name + " is not found, no colors will be set for any usernames")
         usernames = []
         colors = []
         pass
@@ -55,7 +56,7 @@ def get_usernames_and_colors(filename):
 
 
 if __name__ == "__main__":
-    filename = sys.argv[1]
+    file_name = sys.argv[1]
     
     extension = ".json"
     debug_count = 0
@@ -63,7 +64,7 @@ if __name__ == "__main__":
     channel_id = str(STREAMER_ID)
     id = 1000000
     user_id = 770000
-    jsonArray = []
+    json_array = []
     start = '{"streamer": { "name": "' + STREAMER_USERNAME + '", "id": ' + str(STREAMER_ID) + ' }, "comments":'
     end = ',"embeddedData": null }'
 
@@ -79,42 +80,43 @@ if __name__ == "__main__":
     MODERATORS = convert_csv_into_array("config/mods.csv")
     VIPS = convert_csv_into_array("config/vips.csv")
     
-    firstIteration = True
-    dayStartCheck = 0
-    newday = False
+    first_iteration = True
+    day_start_check = 0
 
-    with io.open(filename, 'r', encoding='utf8') as reader:
+    with io.open(file_name, 'r', encoding='utf8') as reader:
         for line in reader:
-            #checking if the line is a message
+            # checking if the line starts with a "["" which means a timestamp, the messages
+            # we want will all start with one, so skip to the next line if it's not there
             if line[0] != '[':
                 continue
 
-            #debug_count = debug_count + 1
-            #print(debug_count)
+            if DEBUG_MODE:
+                debug_count = debug_count + 1
+                print("lines in loop: " + str(debug_count))
 
-            splitLine = line.split(' ', 2)
-            #print(splitLine)
+            split_line = line.split(' ', 2)
+            if DEBUG_MODE:
+                print(split_line)
 
-            if len(splitLine) <= 2:
+            if len(split_line) <= 2:
                 continue
 
             user_notice = {}
             user_badges = {}
             
-            timestamp = splitLine[0].strip('[]')
-            timestampSplit = timestamp.split(':')
-            #print(timestampSplit)
-            offset_seconds = (int(timestampSplit[0]) * 3600) + (int(timestampSplit[1]) * 60) + int(timestampSplit[2])
+            timestamp = split_line[0].strip('[]') # from "[23::01:24]"" to "23:01:24" 
+            timestamp_split = timestamp.split(':') # from "23:01:24" to an array of "23", "01", "24"
+            offset_seconds = (int(timestamp_split[0]) * 3600) + (int(timestamp_split[1]) * 60) + int(timestamp_split[2])
             
             #checking next day (bad implementation prob (only 2 days))
             #>>>offset_seconds compare instead of just hours
             datestamp = ""
 
-            if firstIteration:
-                firstIteration = False
-                dayStartCheck = timestampSplit[0]
+            if first_iteration:
+                first_iteration = False
+                day_start_check = timestamp_split[0]
 
-            if timestampSplit[0] < dayStartCheck:
+            if timestamp_split[0] < day_start_check:
                 datestamp = "2023-01-02T" + timestamp + "Z"
                 offset_seconds = offset_seconds + (24 * 3600)
             else:
@@ -123,20 +125,22 @@ if __name__ == "__main__":
             name = ""
             message = ""
             
-            if splitLine[1][len(splitLine[1]) - 1] == ':':
-                name = splitLine[1].rstrip(':')
-                message = splitLine[2].rstrip('\n')
-                #print("." + name + ".")
-                #print("." + message + ".")
+            if split_line[1][len(split_line[1]) - 1] == ':':
+                name = split_line[1].rstrip(':')
+                message = split_line[2].rstrip('\n')
+                if DEBUG_MODE:
+                    print("." + name + ".")
+                    print("." + message + ".")
             #i don't understand what this supposed to do
-            elif splitLine[1].rstrip('\n') == "":
+            elif split_line[1].rstrip('\n') == "":
                 try:
-                    name = splitLine[2].rstrip(':')
-                    #print("." + name + ".")
-                    message = splitLine[3].rstrip('\n')
+                    name = split_line[2].rstrip(':')
+                    if DEBUG_MODE:
+                        print("." + name + ".")
+                    message = split_line[3].rstrip('\n')
                     is_action = False
                 except IndexError: continue # if there happens to be a timestamp and a blank line, ignore it and continue to the next line
-            elif "subscribed" in splitLine[2]:
+            elif "subscribed" in split_line[2]:
                 splitSub = line.split(' ', 2)
                 name = splitSub[1]
                 message = name + " " + splitSub[2].rstrip('\n')
@@ -195,17 +199,17 @@ if __name__ == "__main__":
                 the_json["message"]["user_badges"][0]["_id"] = "vip"
                 the_json["message"]["user_badges"][0]["version"] = "1"
 
-            jsonArray.append(the_json)
+            json_array.append(the_json)
             
             id += 1
             user_id += 1
     
     try:
-        os.remove(filename + extension)
+        os.remove(file_name + extension)
     except FileNotFoundError: pass
     
-    writer = io.open(filename + extension, 'w', encoding='utf8')
+    writer = io.open(file_name + extension, 'w', encoding='utf8')
 
     writer.write(start)
-    json.dump(jsonArray, writer, indent=2)
+    json.dump(json_array, writer, indent=2)
     writer.write(end)
