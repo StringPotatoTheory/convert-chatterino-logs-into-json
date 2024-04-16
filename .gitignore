@@ -10,3 +10,4 @@ config/mods.csv
 config/vips.csv
 
 venv
+.idea
