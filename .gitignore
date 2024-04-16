@@ -11,3 +11,4 @@ config/vips.csv
 
 venv
 .idea
+__pycache__
