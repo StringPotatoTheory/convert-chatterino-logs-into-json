@@ -1,5 +1,9 @@
-import io, sys, json, os, numpy, warnings
-
+import io
+import json
+import numpy
+import os
+import sys
+import warnings
 
 # change these values to the streamer's name and ID
 # find the ID for a streamer here: https://streamscharts.com/tools/convert-username
@@ -29,7 +33,8 @@ def convert_csv_into_array(file_name):
         word_array = []
         pass
     return word_array
-    
+
+
 def get_usernames_and_colors(file_name):
     try:
         # disables numpy warnings from being displayed in console
@@ -70,10 +75,10 @@ if __name__ == "__main__":
 
     USER_NOTICE_PARAM_SUB = {"msg-id": "resub"}
 
-    MODERATORS = []
-    VIPS = []
-    COLORS = []
-    COLORS_USERNAMES = []
+    MODERATORS: list
+    VIPS: list
+    COLORS: list
+    COLORS_USERNAMES: list
     
     COLORS_USERNAMES, COLORS = get_usernames_and_colors("config/colors.csv")
 
@@ -139,7 +144,8 @@ if __name__ == "__main__":
                         print("." + name + ".")
                     message = split_line[3].rstrip('\n')
                     is_action = False
-                except IndexError: continue # if there happens to be a timestamp and a blank line, ignore it and continue to the next line
+                except IndexError:
+                    continue # if there happens to be a timestamp and a blank line, ignore it and continue to the next line
             elif "subscribed" in split_line[2]:
                 splitSub = line.split(' ', 2)
                 name = splitSub[1]
@@ -206,7 +212,8 @@ if __name__ == "__main__":
     
     try:
         os.remove(file_name + extension)
-    except FileNotFoundError: pass
+    except FileNotFoundError:
+        pass
     
     writer = io.open(file_name + extension, 'w', encoding='utf8')
 
