@@ -58,6 +58,12 @@ python main.py streamer-2024-01-01.log
 
 Contributions and suggestions welcome! Either view the [contributing guide](CONTRIBUTING.md) for making a pull request, or feel free to add any suggestions or bugs in the [issue tracker](https://github.com/StringPotatoTheory/convert-chatterino-logs-into-json/issues).
 
+## Run tests
+
+```
+python -m unittest -v
+```
+
 ## License
 
 This project is under the [GPLv3 License](LICENSE).
